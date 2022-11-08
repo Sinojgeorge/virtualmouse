@@ -3,6 +3,7 @@ import numpy as np
 import time
 import HandTracking as ht
 import autopy   # Install using "pip install autopy"
+import pyautogui
 
 ### Variables Declaration
 pTime = 0               # Used to calculate frame rate
@@ -47,6 +48,26 @@ while True:
             if length < 40:     # If both fingers are really close to each other
                 cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
                 autopy.mouse.click()    # Perform Click
+
+        if fingers[4] == 1:     # If small finger is up 
+            length, img, lineInfo = detector.findDistance(8, 12, img)
+
+            if length < 40:     # If both fingers are really close to each other
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
+                pyautogui.click(button='right')    # Perform right Click
+        
+        if fingers[1] == 1 and fingers[2] == 1 and fingers[3] == 1:     # If fore finger & middle finger both are up
+            length, img, lineInfo = detector.findDistance(8, 12, img)
+
+            if length > 40:     # If both fingers are really not close to each other
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
+                pyautogui.scroll(10)   # scroll up 10 "clicks"
+        if fingers[1] == 1 and fingers[2]:     # If fore finger & middle finger both are up
+            length, img, lineInfo = detector.findDistance(8, 12, img)
+
+            if length > 40:     # If both fingers are really not close to each other
+                cv2.circle(img, (lineInfo[4], lineInfo[5]), 15, (0, 255, 0), cv2.FILLED)
+                pyautogui.scroll(-10)   # scroll down 10 "clicks"    
 
     cTime = time.time()
     fps = 1/(cTime-pTime)
